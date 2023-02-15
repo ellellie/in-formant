@@ -335,9 +335,15 @@ target_link_libraries(in-formant PRIVATE Eigen3::Eigen ${FFTW_LIBRARIES} Qt6::Ch
 target_link_directories(in-formant PRIVATE ${FFTW_LIBRARY_DIRS})
 
 set(BUILD_SHARED_LIBS TRUE)
-add_subdirectory(external/freetype EXCLUDE_FROM_ALL)
-target_link_libraries(in-formant PRIVATE freetype)
 set(BUILD_SHARED_LIBS)
+
+if(MSVC)
+    add_subdirectory(external/freetype EXCLUDE_FROM_ALL)
+    target_link_libraries(in-formant PRIVATE freetype)
+else()
+    find_package(Freetype REQUIRED)
+    target_link_libraries(in-formant PRIVATE Freetype::Freetype)
+endif()
 
 add_subdirectory(external/rpmalloc EXCLUDE_FROM_ALL)
 target_link_libraries(in-formant PRIVATE rpcxx_only)
